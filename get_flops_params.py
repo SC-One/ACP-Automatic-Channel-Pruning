@@ -45,26 +45,33 @@ parser.add_argument(
     help='The prune rate of CNN guided by best food')
 args = parser.parse_args()
 #food = list(map(int,args.food.split(', ')))
-food = [61, 53, 118, 111, 247, 207, 254, 496, 459, 512, 274, 467, 280]
+food = [61, 53, 118, 111, 247, 207, 254, 496, 459, 512, 274, 467, 280] 
+
+googlenetFood = [96, 16, 32, 128, 32, 96, 96, 16, 48, 112, 24, 64, 128, 24, 64, 144, 32, 64, 160, 32, 128, 160, 32, 128, 192, 48, 128]
+resnetFood = [61,53,118,111,247,207,254,496,459,512,274,467,280]
+resNet110Food = [16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16,
+        32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
+        64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64]
+
 device = torch.device(f"cuda:{args.gpus[0]}") if torch.cuda.is_available() else 'cpu'
 
-print('==> Building model..')
+print('==> Building model.. with device: ', device ," Food length: ", len(food))
 
 if args.arch == 'vgg_cifar':
     orimodel = import_module(f'model.{args.arch}').VGG(args.cfg).to(device)
     model = import_module(f'model.{args.arch}').PSOVGG(args.cfg, foodsource=food).to(device)
 elif args.arch == 'resnet_cifar':
     orimodel = import_module(f'model.{args.arch}').resnet(args.cfg).to(device)
-    model = import_module(f'model.{args.arch}').resnet(args.cfg,food=food).to(device)
+    model = import_module(f'model.{args.arch}').resnet(args.cfg,food=resNet110Food).to(device)
 elif args.arch == 'vgg':
     orimodel = import_module(f'model.{args.arch}').VGG(num_classes=1000).to(device)
     model = import_module(f'model.{args.arch}').PSOVGG(foodsource=food, num_classes = 1000).to(device)
 elif args.arch == 'resnet':
     orimodel = import_module(f'model.{args.arch}').resnet(args.cfg).to(device)
-    model = import_module(f'model.{args.arch}').resnet(args.cfg,food=food).to(device)
+    model = import_module(f'model.{args.arch}').resnet(args.cfg, honey=resnetFood).to(device)
 elif args.arch == 'googlenet':
     orimodel = import_module(f'model.{args.arch}').googlenet().to(device)
-    model = import_module(f'model.{args.arch}').googlenet(food=food).to(device)
+    model = import_module(f'model.{args.arch}').googlenet(food=googlenetFood).to(device)
 elif args.arch == 'densenet':
     orimodel = import_module(f'model.{args.arch}').densenet().to(device)
     model = import_module(f'model.{args.arch}').densenet(food=food).to(device)

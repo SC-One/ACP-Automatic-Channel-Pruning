@@ -105,6 +105,7 @@ class GoogLeNet(nn.Module):
         if food is None:
             self.food = [96, 16, 32, 128, 32, 96, 96, 16, 48, 112, 24, 64, 128, 24, 64, 144, 32, 64, 
                          160, 32, 128, 160, 32, 128, 192, 48, 128]           
+            print("food was empty! , default food: " , self.food)
         else:
             self.food = food
 
