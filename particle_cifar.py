@@ -93,12 +93,12 @@ elif args.arch == 'googlenet':
 elif args.arch == 'densenet':
     origin_model = import_module(f'model.{args.arch}').densenet().to(device)
 
-if args.base_food_model is None or not os.path.exists(args.base_food_model):
-    raise Exception('Food_model path should be exist!')
+# if args.base_food_model is None or not os.path.exists(args.base_food_model):
+#     raise Exception('Food_model path should be exist!')
 
 
-ckpt = torch.load(args.base_food_model, map_location=device)
-origin_model.load_state_dict(ckpt['state_dict'])
+# ckpt = torch.load(args.base_food_model, map_location=device)
+# origin_model.load_state_dict(ckpt['state_dict'])
 oristate_dict = origin_model.state_dict()
 
 
